@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#090b10">
+<meta name="description" content="BEATLAB — gratis mobile-first MPC-inspired sampler">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="src/styles.css">
+<title>BEATLAB — Mobile Sampler</title>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div><div class="brand">BEAT<span>LAB</span></div><div class="sub">SAMPLE · CHOP · SEQUENCE</div></div>
+    <div class="status" id="audioStatus">● AUDIO READY</div>
+  </header>
+
+  <section class="panel">
+    <div class="section-head"><div class="eyebrow">TRANSPORT & TEMPO</div><span class="pill">16-STEP ENGINE</span></div>
+    <div class="transport">
+      <div class="control">
+        <label class="label" for="bpm">TEMPO</label>
+        <div class="tempo-row"><button class="mini-btn" id="minus" aria-label="BPM omlaag">−</button><strong id="bpmValue">90</strong><button class="mini-btn" id="plus" aria-label="BPM omhoog">+</button></div>
+        <input id="bpm" class="range" type="range" min="50" max="180" value="90">
+      </div>
+      <div class="control">
+        <span class="label">PATTERN PLAYBACK</span>
+        <div class="actions"><button class="btn primary" id="play">▶ PLAY</button><button class="btn" id="stop">■ STOP</button></div>
+        <div class="hint" id="transportHint">Ready to make a beat</div><div class="meter"><div id="meterBar"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div class="eyebrow">PERFORMANCE PADS</div><span class="pill" id="selectedLabel">PAD 01 SELECTED</span></div>
+    <div class="pads" id="pads"></div>
+    <p class="notice">Tik een pad om te luisteren. Selecteer een pad om samples en chops eraan toe te wijzen.</p>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div class="eyebrow">SAMPLE DECK</div><span class="pill" id="sampleCount">0 SAMPLES</span></div>
+    <div class="sample-info">
+      <div class="sample-text"><div class="filename" id="sampleName">No sample loaded</div><div class="hint" id="sampleHint">Importeer een WAV of MP3 om te beginnen.</div></div>
+      <div class="actions"><label class="btn primary file-label" for="fileInput">＋ IMPORT AUDIO</label><input id="fileInput" type="file" accept=".wav,.mp3,audio/wav,audio/mpeg,audio/*"><button class="btn" id="assignNext" disabled>ASSIGN NEXT PAD</button></div>
+    </div>
+    <div class="wave-wrap"><canvas id="wave" aria-label="Sample waveform preview"></canvas><span class="wave-label">WAVEFORM / AUDIO PREVIEW</span></div>
+    <p class="notice" id="message" role="status">Tip: selecteer een pad en importeer een sample.</p>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div class="eyebrow">SAMPLE CHOPPER</div><span class="pill" id="chopStatus">LOAD A SAMPLE</span></div>
+    <p class="hint">Maak een eigen slice met start/einde of verdeel je sample automatisch in 16 chops.</p>
+    <div class="chop-controls">
+      <div class="chop-field"><label class="label" for="chopStart">START <strong class="chop-val" id="startVal">0.00 s</strong></label><input id="chopStart" class="range" type="range" min="0" max="1000" value="0" disabled></div>
+      <div class="chop-field"><label class="label" for="chopEnd">END <strong class="chop-val" id="endVal">0.00 s</strong></label><input id="chopEnd" class="range" type="range" min="0" max="1000" value="1000" disabled></div>
+    </div>
+    <div class="actions top-gap"><button class="btn primary" id="previewChop" disabled>▶ PREVIEW</button><button class="btn" id="assignChop" disabled>ASSIGN TO PAD</button><button class="btn" id="autoChop" disabled>✂ AUTO-CHOP 16</button></div>
+    <div class="chop-pad-grid" id="chopPads"></div><p class="notice" id="chopHint">Importeer eerst audio om chops te maken.</p>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div class="eyebrow">QUICK SEQUENCER</div><span class="pill">16 STEPS</span></div>
+    <p class="hint">Selecteer een pad en tik stappen aan. PLAY triggert alle actieve pads.</p>
+    <div class="steps" id="steps"></div>
+    <div class="actions top-gap"><button class="btn" id="clearSteps">CLEAR SELECTED PAD</button><button class="btn" id="demoBeat">LOAD DEMO BEAT</button></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div class="eyebrow">PATTERN BANK</div><span class="pill" id="patternStatus">PATTERN 01</span></div>
+    <p class="hint">Bouw vier variaties en wissel ertussen.</p>
+    <div class="pattern-list" id="patternList"></div>
+    <div class="actions top-gap"><button class="btn" id="copyPattern">COPY TO NEXT</button><button class="btn" id="clearPattern">CLEAR PATTERN</button></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div class="eyebrow">MASTER FX</div><span class="pill">LIVE AUDIO</span></div>
+    <div class="fx-grid">
+      <div class="fx-control">
+        <div class="section-head"><label class="label" for="eqFreq">EQUALIZER · FREQUENCY</label><strong id="eqFreqText" class="fx-value">1.000 Hz</strong></div>
+        <input id="eqFreq" class="range" type="range" min="0" max="20000" step="10" value="1000">
+        <div class="section-head top-gap-small"><label class="label" for="eqGain">GAIN</label><strong id="eqGainText" class="fx-value">0 dB</strong></div>
+        <input id="eqGain" class="range" type="range" min="-18" max="18" step=".5" value="0">
+        <p class="hint">Eén instelbare EQ-band; 0 Hz wordt begrensd tot een geldige frequentie.</p>
+      </div>
+      <div class="fx-control">
+        <div class="section-head"><label class="label" for="reverbSize">REVERB · ROOM SIZE</label><span class="pill" id="reverbState">SMALL</span></div>
+        <input id="reverbSize" class="range" type="range" min="0" max="100" value="25">
+        <div class="fx-readout"><span class="hint">Klein</span><strong id="reverbSizeText" class="fx-value">25%</strong><span class="hint">Groot</span></div>
+        <p class="hint">Stel de ruimtelijkheid van je sound in.</p>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">BEATLAB · BUILD 02 · MADE FOR MOBILE</footer>
+</main>
+<script src="src/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "BEATLAB Mobile Sampler",
+  "short_name": "BEATLAB",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#111318",
+  "theme_color": "#111318",
+  "description": "MPC-inspired browser sampler"
+}
